@@ -1,16 +1,19 @@
 {
   "name": "newprosekafile",
   "version": "1.0.0",
-  "description": "",
-  "main": "script.js",
+  "description": "A serverless application for tracking button clicks and sharing counts",
+  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js",
+    "dev": "vercel dev",
+    "build": "vercel build",
+    "deploy": "vercel"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["serverless", "click-tracker", "mongodb"],
+  "author": "Your Name",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
-    "express": "^4.19.2"
-  }
+    "express": "^4.19.2",
+    "mongodb": "^5.0.0" 
 }

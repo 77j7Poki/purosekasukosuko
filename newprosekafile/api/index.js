@@ -8,7 +8,13 @@ async function connectToDatabase() {
         return { client: cachedClient, db: cachedDb };
     }
 
-    const uri = "mongodb+srv://egoatto:ArxbymJyJfihxLFt@cluster0.gy0ux.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"; // 環境変数から読み込むのがベスト
+    const uri = process.env.MONGODB_URI; // 環境変数からURIを取得
+    console.log("MongoDB URI:", uri); // デバッグ用: URIの確認
+
+    if (!uri) {
+        throw new Error('MongoDB URI is not set in environment variables');
+    }
+
     const client = new MongoClient(uri, {
         serverApi: {
             version: ServerApiVersion.v1,
@@ -17,16 +23,23 @@ async function connectToDatabase() {
         }
     });
 
-    await client.connect();
-    const db = client.db('myDatabase'); // データベース名を設定
-    cachedClient = client;
-    cachedDb = db;
-
-    return { client, db };
+    try {
+        await client.connect();
+        const db = client.db('myDatabase'); // データベース名を設定
+        cachedClient = client;
+        cachedDb = db;
+        console.log("Connected to MongoDB");
+        return { client, db };
+    } catch (error) {
+        console.error("Failed to connect to MongoDB:", error);
+        throw new Error('Database connection failed');
+    }
 }
 
 export default async function handler(req, res) {
     try {
+        console.log("Received request:", req.method, req.query);
+
         const { db } = await connectToDatabase();
         const collection = db.collection('counts'); // コレクション名を設定
 
@@ -34,27 +47,34 @@ export default async function handler(req, res) {
             // カウントを取得
             const countsDoc = await collection.findOne({});
             if (countsDoc) {
+                console.log("Retrieved counts:", countsDoc.counts);
                 return res.json({ counts: countsDoc.counts });
             } else {
+                console.log("No counts found, initializing...");
                 return res.json({ counts: [0, 0, 0, 0] });
             }
         } else if (req.method === 'POST') {
             const button = parseInt(req.query.button, 10);
+            console.log("Button clicked:", button);
+
             if (button >= 1 && button <= 4) {
                 // 現在のカウントを取得して更新
                 const countsDoc = await collection.findOne({});
                 let counts = countsDoc ? countsDoc.counts : [0, 0, 0, 0];
                 counts[button - 1]++;
                 await collection.updateOne({}, { $set: { counts: counts } }, { upsert: true });
+                console.log("Updated counts:", counts);
                 return res.json({ count: counts[button - 1] });
             } else {
+                console.error("Invalid button number:", button);
                 return res.status(400).send('Invalid button number');
             }
         } else {
+            console.error("Method not allowed:", req.method);
             return res.status(405).send('Method Not Allowed');
         }
     } catch (error) {
-        console.error('Error connecting to MongoDB:', error);
+        console.error('Error processing request:', error);
         return res.status(500).send('Internal Server Error');
     }
 }
