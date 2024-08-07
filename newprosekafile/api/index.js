@@ -36,6 +36,7 @@ export default async function handler(req, res) {
         const collection = db.collection('counts'); // コレクション名を設定
 
         if (req.method === 'GET') {
+            // カウントを取得
             const countsDoc = await collection.findOne({});
             if (countsDoc) {
                 console.log("Retrieved counts:", countsDoc.counts);
@@ -47,6 +48,7 @@ export default async function handler(req, res) {
         } else if (req.method === 'POST') {
             const button = parseInt(req.query.button, 10);
             if (button >= 1 && button <= 4) {
+                // 現在のカウントを取得して更新
                 const countsDoc = await collection.findOne({});
                 let counts = countsDoc ? countsDoc.counts : [0, 0, 0, 0];
                 counts[button - 1]++;
