@@ -2,8 +2,11 @@ let sukoCount = 0;
 
 async function tapButton(buttonNumber) {
     try {
-        const response = await fetch(`/api/tap?button=${buttonNumber}`, {
-            method: 'POST'
+        const response = await fetch(`/api?button=${buttonNumber}`, { // APIパスを変更
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
         });
 
         if (!response.ok) {
@@ -12,7 +15,10 @@ async function tapButton(buttonNumber) {
 
         const data = await response.json();
         document.getElementById(`count${buttonNumber}`).textContent = data.count;
-        sukoCount = data.count; // 最新のカウントを更新
+
+        // ボタンをクリックするたびに全体のカウントを更新
+        await updateCounts(); 
+
     } catch (error) {
         console.error('Error:', error);
     }
@@ -20,8 +26,13 @@ async function tapButton(buttonNumber) {
 
 async function updateCounts() {
     try {
-        const response = await fetch('/api/counts');
-        
+        const response = await fetch('/api', { // APIパスを変更
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -29,10 +40,11 @@ async function updateCounts() {
         const data = await response.json();
         for (let i = 1; i <= 4; i++) {
             document.getElementById(`count${i}`).textContent = data.counts[i - 1];
-            if (i === 1) { // 初回ロード時の総すこカウントを設定
-                sukoCount = data.counts[i - 1];
-            }
         }
+
+        // 総すこカウントを更新
+        sukoCount = data.counts.reduce((acc, cur) => acc + cur, 0);
+
     } catch (error) {
         console.error('Error:', error);
     }

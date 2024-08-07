@@ -1,4 +1,4 @@
-let counts = [0, 0, 0, 0]; // サーバー起動時にカウントを初期化
+const counts = [0, 0, 0, 0]; // グローバルスコープで一時的に保持
 
 export default function handler(req, res) {
     if (req.method === 'GET') {
