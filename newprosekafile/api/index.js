@@ -9,6 +9,12 @@ async function connectToDatabase() {
     }
 
     const uri = process.env.MONGODB_URI; // 環境変数からURIを取得
+    console.log("MongoDB URI:", uri); // デバッグ用: URIの確認
+
+    if (!uri) {
+        throw new Error('MongoDB URI is not set in environment variables');
+    }
+
     const client = new MongoClient(uri, {
         serverApi: {
             version: ServerApiVersion.v1,
@@ -32,6 +38,8 @@ async function connectToDatabase() {
 
 export default async function handler(req, res) {
     try {
+        console.log("Received request:", req.method, req.query);
+
         const { db } = await connectToDatabase();
         const collection = db.collection('counts'); // コレクション名を設定
 
@@ -47,6 +55,8 @@ export default async function handler(req, res) {
             }
         } else if (req.method === 'POST') {
             const button = parseInt(req.query.button, 10);
+            console.log("Button clicked:", button);
+
             if (button >= 1 && button <= 4) {
                 // 現在のカウントを取得して更新
                 const countsDoc = await collection.findOne({});
