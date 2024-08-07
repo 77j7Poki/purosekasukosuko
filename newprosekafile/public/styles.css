@@ -1,0 +1,159 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-image: url('background.png');
+    background-size: cover;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    margin-top: 32px;
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 10px;
+    display: inline-block;
+}
+
+h1 {
+    font-size: 36px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 30px;
+    text-shadow: 2px 2px #fff;
+}
+
+.button-container {
+    
+}
+
+button {
+    width: 200px;
+    height: 50px;
+    border: none;
+    background-color: transparent;
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin-right: 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    outline: none;
+    position: relative; /* 波紋エフェクトの基点 */
+    overflow: hidden; /* 波紋がはみ出さないようにする */
+}
+
+#button1 {
+    background-image: url('image1.png');
+}
+
+#button2 {
+    background-image: url('image2.png');
+}
+
+#button3 {
+    background-image: url('image3.png');
+}
+
+#button4 {
+    background-image: url('image4.png');
+}
+
+#button1,
+#button2,
+#button3,
+#button4 {
+    width: 200px;
+    height: 50px;
+    background-size: cover; /* ボタンに画像をフィットさせる */
+    border-radius: 30px; /* 角を丸くする */
+}
+
+span {
+    font-size: 18px;
+    display: block;
+    margin-top: 10px;
+}
+
+footer {
+    margin-top: 30px;
+}
+
+footer button {
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #333;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    outline: none;
+    text-decoration: none;
+}
+.countbutton {
+    display: flex; /* 横並びにする */
+    align-items: center; /* 垂直方向の中央揃え */
+    justify-content: center; /* 要素間のスペースを均等に配置 */
+}
+.letter-spacing-example {
+    letter-spacing: 1px; /* 各文字間に2pxのスペース */
+    font-size: 18px;
+}
+
+.countnumber{
+    font-size: 36px; /* 文字の大きさを32pxに */
+    margin-right: 5px;
+}
+
+.suko {
+    font-weight: bold; /* 文字の太さを太めに */
+    font-size: 24px; /* テキストサイズを24pxに */
+    color: #ffb6c1; /* 柔らかいピンク色 */
+    margin-left: 16px; /* 左に余白を16px */
+  }
+
+
+/* クリックしたら波紋が広がる */
+
+.btnripple{
+    /*波紋の基点とするためrelativeを指定*/
+  position: relative;
+    /*はみ出す波紋を隠す*/
+  overflow: hidden;
+    /*ボタンの形状*/
+    text-decoration: none;
+  display:inline-block;
+
+  color: #fff;
+  background-color: transparent; 
+  border-radius: 25px;
+    outline: none;
+}
+
+.btnripple::after {
+    content: "";
+    /*絶対配置で波紋位置を決める*/
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    /*波紋の形状*/
+    background: radial-gradient(circle, #fff 10%, transparent 10%) no-repeat 50%;
+    transform: scale(10, 10);
+    /*はじめは透過0に*/
+    opacity: 0;
+    /*アニメーションの設定*/
+    transition: transform 0.3s, opacity 1s;
+}
+
+/*クリックされたあとの形状の設定*/
+    .btnripple:active::after {
+    transform: scale(0, 0);
+    transition: 0s;
+    opacity: 0.3;
+}
+.btnripple.share-button {
+    background-color: #FFF0F5; /* Sets the background to a light pink color */
+    color: black;
+    font-weight: bold; /* Makes the text bold */
+}
